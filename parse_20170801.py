@@ -134,7 +134,7 @@ class Terms:
 
             if len(similar_terms) > 1:
                 res.append(similar_terms)
-
+                
         return res
 
     def collapse_cl_terms(self):

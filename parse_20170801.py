@@ -1,5 +1,6 @@
 #!/usr/bin env python3
 import yaml
+import pandas as pd
 from collections import defaultdict
 
 from obo_utils.terms import Term
@@ -209,6 +210,23 @@ if __name__ == '__main__':
     print(len(comparisons))
     print(len(terms))
 
+    edges = []
+
+    for term in terms:
+        for parent in term.is_a:
+            edges.append([term.term_id, parent])
+
+    pd.DataFrame(edges).to_csv('edges.tsv', sep='\t')
+
+    edges = []
+    terid_to_term = {term.term_id: term for term in terms}
+
+    for term in terms:
+        for parent in term.is_a:
+            if parent.startswith('CL:'):
+                edges.append([term.name, terid_to_term[parent].name])
+
+    pd.DataFrame(edges).to_csv('edges_name.tsv', sep='\t')
+
     # cl_terms_id = [id for id in terms_id if id.startswith('CL:')]
-    #
     # print(len(cl_terms_id))

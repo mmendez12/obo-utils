@@ -108,7 +108,7 @@ def main(graph_filename, up_down_filename):
     wideleast_display = min([node.width for node in node_to_text_display.values()])
 
     mean_height_display = np.mean([node.height for node in node_to_text_display.values()])
-    mean_height_display *= .7 # TODO: why this number? make height smaller
+    mean_height_display *= .7  # TODO: why this number? make height smaller
 
     # plot chart nodes
     for node_id, node in chart_nodes.items():
@@ -139,11 +139,12 @@ def main(graph_filename, up_down_filename):
             shrinkA=.1, shrinkB=20, lw=.01, ec="black", headwidth=5, headlength=6, width=1))
     ax.axis("off")
 
-    outname = "cl_spi1_newline_script"
+    outname = "cl_spi1_newline_script"  # TODO: make parameter
     exts = ["png", "pdf", "svg"]
     for ext in exts:
         fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
 
 
 if __name__ == "__main__":
+    # TODO: use argparse
     main("ontoviewer_graph.json", "./25_pyRRF_500_new_onto_SPI1.new.tsv")

@@ -140,11 +140,14 @@ def main(graph_filename, up_down_filename):
     ax.axis("off")
 
     outname = "cl_spi1_newline_script"  # TODO: make parameter
-    exts = ["png", "pdf", "svg"]
+    # exts = ["png", "pdf", "svg"]
+    exts = ["png"]
     for ext in exts:
         fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
 
 
 if __name__ == "__main__":
     # TODO: use argparse
+    import make_ontoviewer_coords
+    make_ontoviewer_coords.main()
     main("ontoviewer_graph.json", "./25_pyRRF_500_new_onto_SPI1.new.tsv")

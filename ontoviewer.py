@@ -124,8 +124,8 @@ def main(graph_filename, up_down_filename):
     # plot short nodes (sac and mc)
     for node_id, node in short_nodes.items():
         node_to_patch_center[node_id] = {"x": node["x"], "y": node["y"]}
-        bbox = dict(facecolor='none', edgecolor=node["color"], alpha=0.5, boxstyle="round,pad=.9")
-        t = ax.text(node["x"], node["y"], node["name"], ha="center", va="center", fontsize=FONT_SIZE, bbox=bbox)
+        bbox = dict(facecolor='none', edgecolor=node["color"], alpha=1, boxstyle="round,pad=.3")
+        t = ax.text(node["x"], node["y"], node["node_print_name"], ha="center", va="center", fontsize=FONT_SIZE, bbox=bbox)
         node_to_patch[node_id] = t
 
     # plot edges

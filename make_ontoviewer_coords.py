@@ -179,7 +179,6 @@ def main():
         29783: {'name': '**motile\ncell', 'x': anchor_x + x_dist, 'y': anchor_y},
     }
 
-
     nodes_coord.update(nodes_coord_epith)
     nodes_coord.update(nodes_coord_hemat)
     nodes_coord.update(nodes_coord_muscle)
@@ -198,6 +197,7 @@ def main():
 
     with open("ontoviewer_graph.json", "w") as file_handler:
         json.dump(ontoviewer_coords, file_handler, indent=4)
+
 
 if __name__ == "__main__":
     main()

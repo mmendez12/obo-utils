@@ -48,7 +48,7 @@ def plot_node(node, t_bbox, graph_w_display, graph_h_display, ax, fig, pad=2):
 
 def add_up_down_count_to_nodes(nodes, up_down_df):
     """Add up, down and other counts to each nodes.
-    Modify `nodes` in-place"""
+    Modify `nodes` in place"""
 
     columns = ["up", "down", "other"]
 
@@ -56,7 +56,10 @@ def add_up_down_count_to_nodes(nodes, up_down_df):
         if not node["type"] == "chart_node":
             continue
 
-        node_name = node["name"]
+        node_name = node["shared_name"]
+
+        # if "classical" in node_name:
+        #     print(node_name)
         if node_name in up_down_df.index:
             values = up_down_df.loc[node_name, columns]
             values = values / values.sum()
@@ -136,12 +139,13 @@ def main(graph_filename, up_down_filename):
         ux, uy, vx, vy = arrow_coord
         ax.annotate("", (vx, vy), xytext=(ux, uy), arrowprops=dict(
             facecolor='black', patchA=node_to_patch[u], patchB=node_to_patch[v],
-            shrinkA=.1, shrinkB=20, lw=.01, ec="black", headwidth=5, headlength=6, width=1))
+            shrinkA=.1, shrinkB=20, lw=.01, ec="black", headwidth=5, headlength=6, width=.5))
     ax.axis("off")
 
     outname = "cl_spi1_newline_script"  # TODO: make parameter
     # exts = ["png", "pdf", "svg"]
-    exts = ["png"]
+    exts = ["pdf"]
+    # exts = ["png"]
     for ext in exts:
         fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
 

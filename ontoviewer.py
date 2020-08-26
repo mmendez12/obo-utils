@@ -20,7 +20,7 @@ def plot_node(node, t_bbox, graph_w_display, graph_h_display, ax, fig, pad=2):
 
     # plot graph
     ax1 = fig.add_axes([graph_x_fig, graph_y_fig, graph_w_fig, graph_h_fig])
-    up, down, other = (node["up"], node["down"], node["other"])
+    up, down, other = (node["up"], node["down"], node["neither"])
 
     ax1.barh([1], [up], color="#fb9a99", edgecolor="whitesmoke")
     ax1.barh([1], [down], left=[up], color="#a6cee3", edgecolor="whitesmoke")
@@ -50,7 +50,7 @@ def add_up_down_count_to_nodes(nodes, up_down_df):
     """Add up, down and other counts to each nodes.
     Modify `nodes` in place"""
 
-    columns = ["up", "down", "other"]
+    columns = ["up", "down", "neither"]
 
     for node in nodes.values():
         if not node["type"] == "chart_node":
@@ -71,13 +71,16 @@ def add_up_down_count_to_nodes(nodes, up_down_df):
             nodes[node["id"]][tag] = val
 
 
-def main(graph_filename, up_down_filename):
+def main(graph_filename, up_down_filename, gene="SPI1", outfile="ontoviewer_plot.pdf"):
+
+    with open(up_down_filename) as fh:
+        up_down_dict = json.load(fh)
 
     with open(graph_filename) as fh:
         graph = json.load(fh)
         nodes, edges = (graph["nodes"], graph["edges"])
 
-    up_down_df = pd.read_csv(up_down_filename, sep="\t", index_col=0)
+    up_down_df = pd.DataFrame.from_dict(up_down_dict[gene]).T
     add_up_down_count_to_nodes(nodes, up_down_df)
 
     fig, ax = plt.subplots(figsize=(35, 25))
@@ -142,16 +145,21 @@ def main(graph_filename, up_down_filename):
             shrinkA=.1, shrinkB=20, lw=.01, ec="black", headwidth=5, headlength=6, width=.5))
     ax.axis("off")
 
-    outname = "cl_spi1_newline_script"  # TODO: make parameter
+    # outname = "cl_spi1_newline_script"  # TODO: make parameter
     # exts = ["png", "pdf", "svg"]
-    exts = ["pdf"]
+    # exts = ["pdf"]
     # exts = ["png"]
-    for ext in exts:
-        fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
+    # for ext in exts:
+    #     fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
+    fig.savefig(outfile, bbox_inches='tight')
 
 
 if __name__ == "__main__":
     # TODO: use argparse
     import make_ontoviewer_coords
     make_ontoviewer_coords.main()
-    main("ontoviewer_graph.json", "./25_pyRRF_500_new_onto_SPI1.new.tsv")
+    main(
+        "ontoviewer_graph.json",
+        "up_down_neither_counts_TF.json",
+        "SPI1",
+        "cl_spi1_newline_script.pdf")

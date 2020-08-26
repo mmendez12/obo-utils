@@ -185,8 +185,22 @@ def main():
     nodes_coord.update(nodes_coord_connect)
     nodes_coord.update(nodes_coord_legend)
 
+    nodes_print_name = {
+        "kidney cell;;kidney epithelial cell": "kidney\nepithelial\ncell",
+        "CD14-positive, CD16-negative classical monocyte;;classical monocyte": "CD14-positive,\nCD16-negative\nclassical\nmonocyte",
+        "GAG secreting cell;;carbohydrate secreting cell": "GAG\nsecreting\ncell",
+        "endopolyploid cell;;hepatocyte;;metabolising cell;;polyploid cell": "hepatocyte",
+        "defensive cell;;phagocyte": "phagocyte",
+        "barrier cell;;lining cell": "lining\ncell",
+        "non-striated muscle cell;;smooth muscle cell;;visceral muscle cell": "smooth\nmuscle\ncell",
+        "glial cell;;glial cell (sensu Vertebrata)": "glial\ncell\n(sensu\nVertebrata)",
+        "electrically active cell;;electrically responsive cell": "electrically\nresponsive\ncell",
+        "alpha-beta T cell;;mature T cell;;mature alpha-beta T cell": "mature\nalpha-beta\nT cell",
+        "multi fate stem cell;;somatic stem cell": "multi\nfate\nstem\ncell",
+    }
+
     for node_id in nodes_coord:
-        nodes[str(node_id)]["node_print_name"] = nodes_coord[node_id]["name"]
+        nodes[str(node_id)]["node_print_name"] = nodes_print_name.get(nodes[str(node_id)]["shared_name"], nodes_coord[node_id]["name"])
         nodes[str(node_id)]["y"] = nodes_coord[node_id]["y"]
         nodes[str(node_id)]["x"] = nodes_coord[node_id]["x"]
 

@@ -1,4 +1,6 @@
 import json
+import os
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 import numpy as np
@@ -71,7 +73,7 @@ def add_up_down_count_to_nodes(nodes, up_down_df):
             nodes[node["id"]][tag] = val
 
 
-def main(graph_filename, up_down_filename, gene="SPI1", outfile="ontoviewer_plot.pdf"):
+def main(graph_filename, up_down_filename, gene="SPI1", outfile="ontoviewer_plot.pdf", percent_up_down_threshold=0):
 
     with open(up_down_filename) as fh:
         up_down_dict = json.load(fh)
@@ -81,6 +83,11 @@ def main(graph_filename, up_down_filename, gene="SPI1", outfile="ontoviewer_plot
         nodes, edges = (graph["nodes"], graph["edges"])
 
     up_down_df = pd.DataFrame.from_dict(up_down_dict[gene]).T
+
+    up_down_percent = up_down_df[["up", "down"]].sum(1) / up_down_df.sum(1) * 100
+    if (up_down_percent > percent_up_down_threshold).sum() == 0:
+        return None
+
     add_up_down_count_to_nodes(nodes, up_down_df)
 
     fig, ax = plt.subplots(figsize=(35, 25))
@@ -152,14 +159,62 @@ def main(graph_filename, up_down_filename, gene="SPI1", outfile="ontoviewer_plot
     # for ext in exts:
     #     fig.savefig(f"{outname}.{ext}", bbox_inches='tight')
     fig.savefig(outfile, bbox_inches='tight')
+    plt.close(fig)
 
 
 if __name__ == "__main__":
     # TODO: use argparse
     import make_ontoviewer_coords
     make_ontoviewer_coords.main()
-    main(
-        "ontoviewer_graph.json",
-        "up_down_neither_counts_TF.json",
-        "SPI1",
-        "cl_spi1_newline_script.pdf")
+    # main(
+    #     "ontoviewer_graph.json",
+    #     "up_down_neither_counts_TF.json",
+    #     "SPI1",
+    #     "cl_spi1_newline_script.pdf")
+
+    up_down_filenames = [
+        ("up_down_neither_counts_lncRNA_500_rob10acc90.0.json", "lnc"),
+        ("up_down_neither_counts_TF_500_rob10acc90.0.json", "tf"),
+        ("up_down_neither_counts_CD_500_rob10acc90.0.json", "cd")
+    ]
+
+    exts = [
+        # "png",
+        "pdf"
+    ]
+
+    for up_down_filename, prefix in up_down_filenames:
+
+        with open(up_down_filename) as fh:
+            up_down_dict = json.load(fh)
+
+        for gene in up_down_dict:
+            print(gene)
+            for ext in exts:
+                outfile_name = f"plots/{prefix}_{gene}.{ext}"
+                if os.path.exists(outfile_name):
+                    continue
+                main(
+                    "ontoviewer_graph.json",
+                    up_down_filename,
+                    gene,
+                    outfile_name,
+                    50)
+
+    # exts = [
+    #     # "png",
+    #     "pdf"
+    # ]
+    #
+    # for up_down_filename, prefix in up_down_filenames:
+    #
+    #     with open(up_down_filename) as fh:
+    #         up_down_dict = json.load(zfh)
+    #
+    #     for gene in up_down_dict:
+    #         for ext in exts:
+    #             main(
+    #                 "ontoviewer_graph.json",
+    #                 up_down_filename,
+    #                 gene,
+    #                 f"plots/{prefix}_{gene}.{ext}")

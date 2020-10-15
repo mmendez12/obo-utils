@@ -180,7 +180,35 @@ class Terms:
 
 
 if __name__ == '__main__':
-    terms = Terms('./ff-phase2-170801.obo.txt')
+    # TODO: code this to return always the oldest ancestor
+    nodes_print_name = {
+        "kidney cell;;kidney epithelial cell": "kidney epithelial cell",
+        "CD14-positive, CD16-negative classical monocyte;;classical monocyte": "CD14-positive, CD16-negative classical monocyte",
+        "GAG secreting cell;;carbohydrate secreting cell": "GAG secreting cell",
+        "endopolyploid cell;;hepatocyte;;metabolising cell;;polyploid cell": "hepatocyte",
+        "defensive cell;;phagocyte": "phagocyte",
+        "barrier cell;;lining cell": "lining cell",
+        "non-striated muscle cell;;smooth muscle cell;;visceral muscle cell": "smooth muscle cell",
+        "glial cell;;glial cell (sensu Vertebrata)": "glial cell (sensu Vertebrata)",
+        "electrically active cell;;electrically responsive cell": "electrically responsive cell",
+        "alpha-beta T cell;;mature T cell;;mature alpha-beta T cell": "mature alpha-beta T cell",
+        "multi fate stem cell;;somatic stem cell": "multi fate stem cell",
+    }
+
+    nodes_print_id = {
+        "kidney cell;;kidney epithelial cell": "CL:0002518",
+        "CD14-positive, CD16-negative classical monocyte;;classical monocyte": "CL:0002057",
+        "GAG secreting cell;;carbohydrate secreting cell": "CL:0000153",
+        "endopolyploid cell;;hepatocyte;;metabolising cell;;polyploid cell": "CL:0000182",
+        "defensive cell;;phagocyte": "CL:0000234",
+        "barrier cell;;lining cell": "CL:0000213",
+        "non-striated muscle cell;;smooth muscle cell;;visceral muscle cell": "CL:0000192",
+        "glial cell;;glial cell (sensu Vertebrata)": "CL:0000243",
+        "electrically active cell;;electrically responsive cell": "CL:0000393",
+        "alpha-beta T cell;;mature T cell;;mature alpha-beta T cell": "CL:0000791",
+        "multi fate stem cell;;somatic stem cell": "CL:0000048",
+    }
+
     terms = Terms('./ff-phase2-170801.obo.txt').collapse_cl_terms().values()
     terms = [term for term in terms if len(term.samples) > 10]
 
@@ -189,6 +217,8 @@ if __name__ == '__main__':
         {
             'id': term.term_id,
             'name': term.name,
+            'print_name': nodes_print_name.get(term.name, term.name),
+            'print_id': nodes_print_id.get(term.name, term.term_id),
             'samples': [sample.replace('FF:', '') for sample in term.samples]
         } for term in terms]
 
